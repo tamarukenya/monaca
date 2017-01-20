@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+body {
+    
+    border:1px solid #ccc;
+   
+width:100%;
+height:100%;
+    margin:10px auto;
+}
+
+header,nav,footer {
+
+    
+
+    border:1px solid #ccc;
+    margin:5px;
+    padding:10px;
+}
+header {
+ border:1px solid #ccc;
+    text-align:center;
+    
+}
+article {
+text-align:center;
+float:left;
+    width:100%;
+    height:90%;
+}

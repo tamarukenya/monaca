@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-style-type" content="text/css">
+<link rel="stylesheet" type="text/css" href="css/porkar.css">
+<script src="script.js"></script>
+</head>
+<br>
+<body>
+
+  <header>
+      <b>ポーカーゲームだよ</b>
+  </header>
+  <article>
+  <div id="script">
+  <!-- cpの手札 -->
+<font color="blue"><b>CPの手札</b></font>
+    <table border=1 width="100%"><td>
+        <th width=20%><img src ="./image/card/z02.png" width=100% height=25% name="cp"></th>
+        <th width=20%><img src ="./image/card/z02.png" width=100% height=25% name="cp1"></th>
+        <th width=20%><img src ="./image/card/z02.png" width=100% height=25% name="cp2"></th>
+        <th width=20%><img src ="./image/card/z02.png" width=100% height=25% name="cp3"></th>
+        <th width=20%><img src ="./image/card/z02.png" width=100% height=25% name="cp4"></th>
+        </td></table>
+         <!-- // 自分の手札の開示 -->
+        <font color="blue"><b>あなたの手札</b></font>
+        <br>
+    <table border=1 align="center" width="100%"><td>
+        <form name="form1">
+        <th width=20%><input type="hidden" name="check" value="0"><input type="checkbox" onclick="this.form.check.value=this.checked ? 1 : 0"><br><img src ="./image/card/z02.png" width=100% height=25% name="my"></th>
+        <th width=20%><input type="hidden" name="check1" value="0"><input type="checkbox" onclick="this.form.check1.value=this.checked ? 1 : 0"><br><img src ="./image/card/z02.png" width=100% height=25% name="my1"></th>
+        <th width=20%><input type="hidden" name="check2" value="0"><input type="checkbox" onclick="this.form.check2.value=this.checked ? 1 : 0"><br><img src ="./image/card/z02.png" width=100% height=25% name="my2"></th>
+        <th width=20%><input type="hidden" name="check3" value="0"><input type="checkbox" onclick="this.form.check3.value=this.checked ? 1 : 0"><br><img src ="./image/card/z02.png" width=100% height=25% name="my3"></th>
+        <th width=20%><input type="hidden" name="check4" value="0"><input type="checkbox" onclick="this.form.check4.value=this.checked ? 1 : 0"><br><img src ="./image/card/z02.png" width=100% height=25% name="my4"></th>
+        <div id="menu2"><input type="button" value="交換する" onClick="dasite()"><input type="reset" value="キャンセル"></div>
+        </form>
+           </td></table>
+           <br>
+        
+    <script>
+   Poker();
+</script>
+
+
+ </article>
+ </body>
+
+
+   </html>
