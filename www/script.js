@@ -16,7 +16,7 @@
     var cpcard = [];    //  相手の手札
     var mysuuzi = [];   // 自分の数字
     var cpsuuzi = [];   // 相手の数字
-   var gara = [["s"],["c"],["h"],["d"],["joker"]]; // フラッシュの判定に用いる柄
+   var gara = ["s","c","h","d","joker"]; // フラッシュの判定に用いる柄
     var mygara = [];    // 自分の柄
     var cpgara = [];    // 相手の柄
     var goukei =0;      //
@@ -69,8 +69,9 @@
         cpcard[i] = b;
         cpsuuzi[i] = suuzi[random];
         
+
     var num = 0;      
-    if(i == 4){       
+    if(i == 4){
     // cpの手札を開示
     CpOpen = function(){
         document.cp.src = "./image/card/"+cpcard[0]+".png";
@@ -90,24 +91,25 @@
     
     // 役判定などの勝敗決定メソッド
    
-       
-    // CPの手札の数字をsort
-    for(var i = 0; i < cpsuuzi.length-1;i++){
-        for(var j = i+1; j < cpsuuzi.length;j++){
-            if(cpsuuzi[i] > cpsuuzi[j]){
-                wk = cpsuuzi[i];
-                cpsuuzi[i] = cpsuuzi[j];
-                cpsuuzi[j] = wk;
-            }
-        }
+    var sortcpcard = [];
+    var sortcpgara = [];
+    var sortcpsuuzi = [];
+    for(var i = 0; i < cpcard.length; i++){
+        sortcpcard[i] = cpcard[i];
+        sortcpgara[i] = cpgara[i];
+        sortcpsuuzi[i] = cpsuuzi[i];
     }
+    
     var suuziwk;
     var garawk;
     var mycardwk;
+    var jbasho = null;
      // 自分の手札の数字をsort
     for(var i = 0; i < mysuuzi.length-1;i++){
         for(var j = i+1; j < mysuuzi.length;j++){
-            if(mysuuzi[i] > mysuuzi[j]){
+if(mysuuzi[i] == "joker"){
+ jbasho = i;}
+             if(mysuuzi[i] > mysuuzi[j]){
                 suuziwk = mysuuzi[i];
                 garawk = mygara[i];
                 mycardwk = mycard[i];
@@ -120,7 +122,55 @@
             }
         }
     }
-    
+var cjbasho = null;
+    // CPの手札の数字をsort
+    for(var i = 0; i < sortcpsuuzi.length-1;i++){
+        for(var j = i+1; j < sortcpsuuzi.length;j++){
+            if(sortcpsuuzi[i] == "joker"){
+ cjbasho = i;}
+            if(sortcpsuuzi[i] > sortcpsuuzi[j]){
+                suuziwk = sortcpsuuzi[i];
+                garawk = sortcpgara[i];
+                mycardwk = sortcpcard[i];
+                sortcpsuuzi[i] = sortcpsuuzi[j];
+                sortcpsuuzi[j] = suuziwk;
+                sortcpgara[i] = sortcpgara[j];
+                sortcpgara[j] = garawk;
+                sortcpcard[i] = sortcpcard[j];
+                sortcpcard[j] = mycardwk;
+            }
+        }
+    }
+    if(jbasho >=0){
+      for(var i = jbasho;i < mysuuzi.length;i++){
+            if((mysuuzi[i-1]+1) == mysuuzi[i+1]){
+                   suuziwk = mysuuzi[i];
+                garawk = mygara[i];
+                mycardwk = mycard[i];
+                mysuuzi[i] = mysuuzi[i+1];
+                mysuuzi[i+1] = suuziwk;
+                mygara[i] = mygara[i+1];
+                mygara[i+1] = garawk;
+                mycard[i] = mycard[i+1];
+                mycard[i+1] = mycardwk;
+              }
+}
+}
+    if(cjbasho >=0){
+      for(var i = cjbasho;i < sortcpsuuzi.length;i++){
+            if((sortcpsuuzi[i-1]+1) == sortcpsuuzi[i+1]){
+                   suuziwk = sortcpsuuzi[i];
+                garawk = sortcpgara[i];
+                mycardwk = sortcpcard[i];
+                sortcpsuuzi[i] = sortcpsuuzi[i+1];
+                sortcpsuuzi[i+1] = suuziwk;
+                sortcpgara[i] = sortcpgara[i+1];
+                sortcpgara[i+1] = garawk;
+                sortcpcard[i] = sortcpcard[i+1];
+                sortcpcard[i+1] = mycardwk;
+              }
+}
+}
     var flush = 1;
     var gara = mygara[0];
     if(gara == "joker"){
@@ -205,26 +255,49 @@
    
     // 自分のストレートの役判定
     for(var i = 0 ; i < mysuuzi.length-1;i++){
-        if((mysuuzi[i]+1 != mysuuzi[i+1])&&(mysuuzi != "joker")){
+        if(mysuuzi[i] == "joker"){
+            continue;
+        }
+        if(mysuuzi[i]+1 != mysuuzi[i+1]){
+            if(mysuuzi[i+1] != "joker"){
             straight = 0;
             break;
+              }else if(mysuuzi[i]+2 == mysuuzi[i+2]){
+                  i+=2;
+              continue;
+              }
         }
     }
-    
+    if(straight == 1){
+        pair = 0;
+        jpair = 0;
+    }
      var straight1 = 1;
      
     // CPのストレートの役判定
-    for(var i = 0 ; i < cpsuuzi.length-1;i++){
-        if((cpsuuzi[i]+1 != cpsuuzi[i+1])&&(cpsuuzi != "joker")){
+    for(var i = 0 ; i < sortcpsuuzi.length-1;i++){
+        if(sortcpsuuzi[i] == "joker"){
+            continue;
+        }
+        if(sortcpsuuzi[i]+1 != sortcpsuuzi[i+1]){
+            if(sortcpsuuzi[i+1] != "joker"){
             straight1 = 0;
             break;
+        }else if(sortcpsuuzi[i]+2 == sortcpsuuzi[i+2]){
+                  i+=2;
+              continue;
+              }
         }
+    }
+    if(straight1 == 1){
+        pair1 = 0;
+        jpair1 = 0;
     }
     // ロイヤルストレートの役判定
     if((mysuuzi[0] == 1 && mysuuzi[1] == 10 && mysuuzi[2] == 11 && mysuuzi[3] == 12 && mysuuzi[4] == 13)&&(mygara[0] == mygara[1] == mygara[2] == mygara[3] == mygara[4])){
         straight = 2;
     }
-    if((cpsuuzi[0] == 1 && cpsuuzi[1] == 10 && cpsuuzi[2] == 11 && cpsuuzi[3] == 12 && cpsuuzi[4] == 13)&&(cpgara[0] == cpgara[1] == cpgara[2] == cpgara[3] == cpgara[4])){
+    if((sortcpsuuzi[0] == 1 && sortcpsuuzi[1] == 10 && sortcpsuuzi[2] == 11 && sortcpsuuzi[3] == 12 && sortcpsuuzi[4] == 13)&&(sortcpgara[0] == sortcpgara[1] == sortcpgara[2] == sortcpgara[3] == sortcpgara[4])){
         straight1 = 2;
     }
     for(var i = 0;i < mysuuzi.length;i++){
@@ -324,10 +397,10 @@
  
     document.write("<div id=\"shouhai\">");
         
-        document.write("<table width=50% height=40% border=1>");
-        document.write("<tr><td bgcolor=\"#00ff00\" width=50% height=50%>CPの役:</td><td width=50% height=50%><img src=\"./image/yaku/"+yaku2+".PNG\"  width=100% height= auto></td></tr>");
-        document.write("<tr><td bgcolor=\"#00ff00\">あなたの役:</td><td><img src=\"./image/yaku/"+yaku1+".PNG\" width=100% heigth=auto name=\"myyaku\"></td></tr>");
-        document.write("<tr><td bgcolor=\"#00ff00\"><font color=\"blue\">結果</font></td><td><img src=\"./image/"+shouhai+".gif\" width=100% heigth=auto name=\"kekka\"></td></tr></table>");
+        document.write("<table border=1 width=\"100%\">");
+        document.write("<tr><td bgcolor=\"#00ff00\" width=10%>CPの役:</td><td width=20% height=50%><img src=\"./image/yaku/"+yaku2+".PNG\"  width=100% height= auto></td></tr>");
+        document.write("<tr><td bgcolor=\"#00ff00\" width=5%>あなたの役:</td><td width=20%><img src=\"./image/yaku/"+yaku1+".PNG\" width=100% heigth=auto name=\"myyaku\"></td></tr></table>");
+        document.write("<table border=1><tr><td bgcolor=\"#00ff00\" width=auto><font color=\"blue\">結果</font></td><td><img src=\"./image/"+shouhai+".png\" width=100% heigth=auto name=\"kekka\"></td></tr></table>");
       document.write("</div>");
       
       document.getElementById("shouhai").style.visibility="hidden";
@@ -370,9 +443,40 @@
         };
         
          Battle = function(){
-
-    
-    
+    var jbasho = null;
+     // 自分の手札の数字をsort
+    for(var i = 0; i < mysuuzi.length-1;i++){
+        for(var j = i+1; j < mysuuzi.length;j++){
+if(mysuuzi[i] == "joker"){
+ jbasho = i;}
+             if(mysuuzi[i] > mysuuzi[j]){
+                suuziwk = mysuuzi[i];
+                garawk = mygara[i];
+                mycardwk = mycard[i];
+                mysuuzi[i] = mysuuzi[j];
+                mysuuzi[j] = suuziwk;
+                mygara[i] = mygara[j];
+                mygara[j] = garawk;
+                mycard[i] = mycard[j];
+                mycard[j] = mycardwk;
+            }
+        }
+    }
+ if(jbasho >=0){
+      for(var i = jbasho;i < mysuuzi.length;i++){
+            if((mysuuzi[i-1]+1) == mysuuzi[i+1]){
+                   suuziwk = mysuuzi[i];
+                garawk = mygara[i];
+                mycardwk = mycard[i];
+                mysuuzi[i] = mysuuzi[i+1];
+                mysuuzi[i+1] = suuziwk;
+                mygara[i] = mygara[i+1];
+                mygara[i+1] = garawk;
+                mycard[i] = mycard[i+1];
+                mycard[i+1] = mycardwk;
+              }
+}
+}
     var flush = 1;
     var gara = mygara[0];
     if(gara == "joker"){
@@ -417,29 +521,41 @@
     var garawk;
     var mycardwk;
 
-     // 自分の手札の数字をsort
-    for(var i = 0; i < mysuuzi.length-1;i++){
-        for(var j = i+1; j < mysuuzi.length;j++){
-            if(mysuuzi[i] > mysuuzi[j]){
-                suuziwk = mysuuzi[i];
-                garawk = mygara[i];
-                mysuuzi[i] = mysuuzi[j];
-                mysuuzi[j] = suuziwk;
-                mygara[i] = mygara[j];
-                mygara[j] = garawk;
-            }
-        }
-    }
-    
+     
     var straight = 1;
     // 自分のストレートの役判定
     for(var i = 0 ; i < mysuuzi.length-1;i++){
-        if((mysuuzi[i]+1 != mysuuzi[i+1])&&(mysuuzi != "joker")){
-            straight = 0;
+        if(mysuuzi[i] == "joker"){
+            continue;
+        }
+        if(mysuuzi[i]+1 != mysuuzi[i+1]){
+         if(mysuuzi[i+1] == "joker") {
+            if(mysuuzi[i]+2 == mysuuzi[i+2]){
+                 alert("ohayou");
+            }else{
+                alert("konnbanha");
+                straight = 0;
+                break;
+            }
+           
+        }else{
+            alert("konnitiha");
+            straight =0;
             break;
         }
+    }else{
+        alert("yes sir");
+        straight = 0;
+        break;
     }
-    
+    if((i = 3)&&(mysuuzi[i+1] == "joker")&&(straight == 1)){
+        break;
+    }
+    }
+    if(straight == 1){
+        pair = 0;
+        jpair = 0;
+    }
    
     // ロイヤルストレートの役判定
     if((mysuuzi[0] == 1 && mysuuzi[1] == 10 && mysuuzi[2] == 11 && mysuuzi[3] == 12 && mysuuzi[4] == 13)&&(mygara[0] == mygara[1] == mygara[2] == mygara[3] == mygara[4])){
@@ -495,32 +611,32 @@
 //ツーペアー            = 2;
 //ワンペアー            = 1;
 //ノーペアー            = 0;
-     
-  
+    
      document.myyaku.src = "./image/yaku/"+yaku+".PNG";
-     document.kekka.src = "./image/"+shouhai+".gif";
+     document.kekka.src = "./image/"+shouhai+".png";
 
 };
 
 dasite = function(){
-   
+    var gara = ["s","c","h","d","joker"];
     if((count == 0)&&(jadgecount == 0)){
+        if(count == 0){
        if(document.form1.check.value == 1){
+           mygara[0] = "oppai";
            random =  Math.floor(Math.random() * hairetu.length);
         var a = hairetu[random];
         var c = gara[random];
         random = Math.floor(Math.random() * a.length);
-       var mozi = c;
+        mozi = c;
         var b = a[random];
         if(b == "null"){
             while(b == "null"){
                 random =  Math.floor(Math.random() * hairetu.length);
-                var a = hairetu[random];
-                var c = gara[random];
+             var    a = hairetu[random];
+            var     c = gara[random];
                 random = Math.floor(Math.random() * a.length);
-        var b = a[random];
-        var mozi = c;
-        
+         b = a[random];
+         mozi = c;
             }
         }
         a[random] = "null";
@@ -529,7 +645,7 @@ dasite = function(){
         mysuuzi[0] = suuzi[random];
        }
        if(document.form1.check1.value == 1){
-           random =  Math.floor(Math.random() * hairetu.length);
+          random =  Math.floor(Math.random() * hairetu.length);
         var a = hairetu[random];
         var c = gara[random];
         random = Math.floor(Math.random() * a.length);
@@ -538,12 +654,11 @@ dasite = function(){
         if(b == "null"){
             while(b == "null"){
                 random =  Math.floor(Math.random() * hairetu.length);
-                var a = hairetu[random];
-                var c = gara[random];
+                 a = hairetu[random];
+                 c = gara[random];
                 random = Math.floor(Math.random() * a.length);
-        var b = a[random];
-        var mozi = c;
-        
+         b = a[random];
+      var mozi = c;       
             }
         }
         a[random] = "null";
@@ -561,11 +676,11 @@ dasite = function(){
         if(b == "null"){
             while(b == "null"){
                 random =  Math.floor(Math.random() * hairetu.length);
-                var a = hairetu[random];
-                var c = gara[random];
+                 a = hairetu[random];
+                 c = gara[random];
                 random = Math.floor(Math.random() * a.length);
-        var b = a[random];
-        var mozi = c;
+         b = a[random];
+         mozi = c;
         
             }
         }
@@ -619,10 +734,14 @@ dasite = function(){
         mygara[4] = mozi;
         mycard[4] = b;
         mysuuzi[4] = suuzi[random];
-       } 
+       }
+       ch = 1;
+        }
+        if(ch == 1){
        Battle();
        openmycard();
        count++;
+        }
     }else if(count == 1){
        // 交換制限回数s
        alert("交換しないで");
@@ -632,4 +751,5 @@ dasite = function(){
         };
     }
     }
+     document.getElementById("high&low").style.visibility="hidden";
     };
